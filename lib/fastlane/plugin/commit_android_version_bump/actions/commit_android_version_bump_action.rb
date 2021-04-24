@@ -12,7 +12,7 @@ module Fastlane
             UI.message("The commit_android_version_bump plugin will use gradle file at (#{build_file_folder})!")
 
             absolute_path = File.expand_path(build_file_folder)
-            build_file_path = build_file_folder+"/build.gradle"
+            build_file_path = build_file_folder+"/dependencies.gradle"
             # find the repo root path
             repo_path = Actions.sh("git -C #{absolute_path} rev-parse --show-toplevel").strip
             repo_pathname = Pathname.new(repo_path)
@@ -21,13 +21,13 @@ module Fastlane
             UI.message("The commit_android_version_bump plugin is looking inside your project folder (#{app_folder_name})!")
 
             build_folder_paths = Dir[File.expand_path(File.join('**/', app_folder_name))].reject { |file| ['build/', 'node_modules/'].any? { |part| file.include? part } }
-            # no build.gradle found: error
+            # no dependencies.gradle found: error
             UI.user_error!('Could not find a build folder in the current repository\'s working directory.') if build_folder_paths.count == 0
 
             UI.message("Found the following project path: #{build_folder_paths}")
             # too many projects found: error
             if build_folder_paths.count > 1
-                UI.user_error!("Found multiple build.gradle projects in the current repository's working directory.")
+                UI.user_error!("Found multiple dependencies.gradle projects in the current repository's working directory.")
             end
 
             build_folder_path = build_folder_paths.first
@@ -37,14 +37,14 @@ module Fastlane
             repo_pathname = Pathname.new(repo_path)
 
 
-            build_file_paths = Dir[File.expand_path(File.join('**/', app_folder_name, 'build.gradle'))].reject { |file| file.include? 'node_modules/' }
+            build_file_paths = Dir[File.expand_path(File.join('**/', app_folder_name, 'dependencies.gradle'))].reject { |file| file.include? 'node_modules/' }
 
-            # no build.gradle found: error
-            UI.user_error!('Could not find a build.gradle in the current repository\'s working directory.') if
+            # no dependencies.gradle found: error
+            UI.user_error!('Could not find a dependencies.gradle in the current repository\'s working directory.') if
                 build_file_paths.count == 0
             # too many projects found: error
             if build_file_paths.count > 1
-                UI.user_error!("Found multiple build.gradle projects in the current repository's working directory.")
+                UI.user_error!("Found multiple dependencies.gradle projects in the current repository's working directory.")
             end
 
             build_file_path = build_file_paths.first
@@ -106,7 +106,7 @@ module Fastlane
       end
 
       def self.description
-        "This Android plugins allow you to commit every modification done in your build.gradle file during the execution of a lane. In fast, it do the same as the commit_version_bump action, but for Android"
+        "This Android plugins allow you to commit every modification done in your dependencies.gradle file during the execution of a lane. In fast, it do the same as the commit_version_bump action, but for Android"
       end
 
       def self.authors
